@@ -4,8 +4,8 @@
 using namespace std;
 
 int main() {
-    string dataFilePath = "kvDB.bin";
-    string indexFilePath = "kvIndex.bin";
+    string dataFilePath = "bin/kvDB.bin";
+    string indexFilePath = "bin/kvIndex.bin";
 
     KeyValueStore kvStore(dataFilePath, indexFilePath);
 
