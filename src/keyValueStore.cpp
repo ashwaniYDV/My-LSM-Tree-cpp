@@ -2,6 +2,17 @@
 #include <fstream>
 #include <iostream>
 
+KeyValueStore::KeyValueStore(const std::string &dataFilePath, const std::string &indexFilePath)
+    : dataFilePath(dataFilePath), indexFilePath(indexFilePath)
+{
+    loadIndex();
+}
+
+KeyValueStore::~KeyValueStore()
+{
+    saveIndex();
+}
+
 void KeyValueStore::saveIndex()
 {
     std::ofstream file(indexFilePath, std::ios::binary | std::ios::trunc);
@@ -128,15 +139,4 @@ std::string KeyValueStore::read(const std::string &_key)
     }
 
     return value;
-}
-
-KeyValueStore::KeyValueStore(const std::string &dataFilePath, const std::string &indexFilePath)
-    : dataFilePath(dataFilePath), indexFilePath(indexFilePath)
-{
-    loadIndex();
-}
-
-KeyValueStore::~KeyValueStore()
-{
-    saveIndex();
 }
