@@ -8,7 +8,7 @@ set(SOURCES
 )
 
 # Add the header files
-include_directories(include)
+include_directories(headers)
 
 # Create the executable
 add_executable(engine ${SOURCES})
