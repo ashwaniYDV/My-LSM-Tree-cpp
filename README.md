@@ -1,1 +1,1 @@
-# Log-Structured-KV-Storage-Engine-C-
+# Log-Structured-KV-Storage-Engine
