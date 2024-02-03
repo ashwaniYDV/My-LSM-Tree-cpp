@@ -155,10 +155,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "CXX compiler"
 				}
 			],
-			"type" : "FILEPATH",
+			"type" : "STRING",
 			"value" : "C:/mingw64/bin/clang++.exe"
 		},
 		{
@@ -315,10 +315,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "C compiler"
 				}
 			],
-			"type" : "FILEPATH",
+			"type" : "STRING",
 			"value" : "C:/mingw64/bin/clang.exe"
 		},
 		{
@@ -691,7 +691,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Program Files (x86)/MyProject"
+			"value" : "C:/Program Files (x86)/Log-Structured-KV-Storage-Engine"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -911,7 +911,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "MyProject"
+			"value" : "Log-Structured-KV-Storage-Engine"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1306,7 +1306,7 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "MyProject_BINARY_DIR",
+			"name" : "Log-Structured-KV-Storage-Engine_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1318,7 +1318,7 @@
 			"value" : "C:/Users/DELL/Documents/GitHub/Log-Structured-KV-Storage-Engine/build"
 		},
 		{
-			"name" : "MyProject_IS_TOP_LEVEL",
+			"name" : "Log-Structured-KV-Storage-Engine_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1330,7 +1330,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "MyProject_SOURCE_DIR",
+			"name" : "Log-Structured-KV-Storage-Engine_SOURCE_DIR",
 			"properties" : 
 			[
 				{
