@@ -1,5 +1,5 @@
 #include <iostream>
-#include "kvStore.h"
+#include "KeyValueStore.h"
 
 using namespace std;
 
