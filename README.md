@@ -11,3 +11,6 @@
 ### TODO
 * For handling large data, store the data in multiple files and write compression algorithms which runs in background to merge these files (since data file is append only, a key can be present in multiple files with latest record in one of the new files)
 * Implement LSM tree.
+
+## Running Project
+* Create a bin folder in root directory if it doesn't exists. It will store the data and index file binaries.
