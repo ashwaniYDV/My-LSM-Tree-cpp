@@ -1,6 +1,7 @@
 # Log-Structured-KV-Storage-Engine
 
-* Implemented a very basic log-structured key-value storage engine in C++.
+* Implemented a basic log-structured key-value storage engine in C++.
+* The databases which use Log-structured storage engine includes Bitcask, LevelDB, Google BigTable, RockDB, Cassandra.
 
 ## Features
 * Lightning-fast writes since data is added in the binary file in append mode.
