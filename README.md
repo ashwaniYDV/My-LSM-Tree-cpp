@@ -9,4 +9,5 @@
 * Supports crash recovery. In case the system crashes during persisting the index, it can be reconstructed using "write-ahead logging" with the data file.
 
 ### TODO
+* For handling large data, store the data in multiple files and write compression algorithms which runs in background to merge these files (since data file is append only, a key can be present in multiple files with latest record in the latest file)
 * Implement LSM tree.
