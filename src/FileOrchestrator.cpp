@@ -5,6 +5,9 @@
 #include <algorithm>
 
 std::string FileOrchestrator::getTimestamp() {
+    // TODO: remove this constnt return statement
+    return "1707054019214";
+
     // Get the current time point in milliseconds
     auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()
@@ -18,20 +21,21 @@ std::string FileOrchestrator::getTimestamp() {
 
 int FileOrchestrator::createFile(const std::string &filePath) {
     // Open the file for writing
-    std::ofstream batFile(filePath);
+    std::ofstream file(filePath);
 
-    if (!batFile.is_open()) {
+    if (!file.is_open()) {
         std::cerr << "Error creating " << filePath << std::endl;
         return 1; // Return an error code
     }
 
     // Close the file
-    batFile.close();
+    file.close();
 
     return 0;
 }
 
 void FileOrchestrator::loadAllIndex() {
+    // TODO: loop through all files in directory and add it to globalFiles
     // for (const auto & entry : std::filesystem::directory_iterator("./")) {
     //     std::cout << entry.path() << std::endl;
     // }
@@ -51,31 +55,23 @@ void FileOrchestrator::saveAllIndex() {
     }
 }
 
+int FileOrchestrator::createFolder(const std::string &folderPath) {
+    if (!std::filesystem::exists(folderPath) || !std::filesystem::is_directory(folderPath)) {
+        // Create the folder if it does not exist
+        if (std::filesystem::create_directory(folderPath)) {
+            std::cout << folderPath << " created successfully" << std::endl;
+        } else {
+            std::cerr << "Failed to create " << folderPath << std::endl;
+            return 1; // Return an error code
+        }
+    }
+    return 0;
+}
+
 int FileOrchestrator::initializeFilesAndFolders() {
-
-    if (!std::filesystem::exists(dataFolder) || !std::filesystem::is_directory(dataFolder)) {
-        // Create the folder if it does not exist
-        if (std::filesystem::create_directory(dataFolder)) {
-            std::cout << dataFolder << " created successfully" << std::endl;
-        } else {
-            std::cerr << "Failed to create " << dataFolder << std::endl;
-            return 1; // Return an error code
-        }
-    } else {
-        std::cout << dataFolder << " already exists" << std::endl;
-    }
-
-    if (!std::filesystem::exists(indexFolder) || !std::filesystem::is_directory(indexFolder)) {
-        // Create the folder if it does not exist
-        if (std::filesystem::create_directory(indexFolder)) {
-            std::cout << indexFolder << " created successfully" << std::endl;
-        } else {
-            std::cerr << "Failed to create " << indexFolder << std::endl;
-            return 1; // Return an error code
-        }
-    } else {
-        std::cout << indexFolder << " already exists" << std::endl;
-    }
+    createFolder(rootFolder);
+    createFolder(dataFolder);
+    createFolder(indexFolder);
 
     if (std::filesystem::is_empty(dataFolder)) {
         createFile(dataFolder + getTimestamp());

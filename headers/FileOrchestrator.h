@@ -9,18 +9,27 @@
 class FileOrchestrator
 {
 private:
-    std::ofstream activeStream;
+    std::string rootFolder = "bin";
     std::string dataFolder = "bin/data/";
     std::string indexFolder = "bin/index/";
+
+    std::ofstream activeStream;
+
+    // map with (key=filename, value=indexTable)
     std::unordered_map<std::string, std::unordered_map<std::string, long long>> globalIndexTable;
+    
+    // vector to store all filenames in sorted order (latest file in index 0)
     std::vector<std::string> globalFiles;
     
 
     std::string getTimestamp();
     std::string getCurrentDataFilePath();
     std::string getCurrentDataFileName();
+
     int initializeFilesAndFolders();
+    int createFolder(const std::string &folderPath);
     int createFile(const std::string &filePath);
+
     void createNew();
 
     void loadAllIndex();
