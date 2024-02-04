@@ -5,16 +5,11 @@
 #include <algorithm>
 
 std::string FileOrchestrator::getTimestamp() {
-    // TODO: remove this constnt return statement
-    return "1707054019214";
-
     // Get the current time point in milliseconds
     auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()
     ).count();
 
-    // Print the current 13-digit UTC timestamp
-    std::cout << "Current 13-digit UTC timestamp: " << currentTime << std::endl;
     std::string timestampString = std::to_string(currentTime);
     return timestampString;
 }
@@ -36,11 +31,9 @@ int FileOrchestrator::createFile(const std::string &filePath) {
 
 void FileOrchestrator::loadAllIndex() {
     // TODO: loop through all files in directory and add it to globalFiles
-    // for (const auto & entry : std::filesystem::directory_iterator("./")) {
-    //     std::cout << entry.path() << std::endl;
-    // }
-
-    globalFiles.push_back("1707054019214");
+    for (const auto & entry : std::filesystem::directory_iterator(dataFolder)) {
+        globalFiles.push_back(entry.path().filename().string());
+    }
 
     std::sort(globalFiles.begin(), globalFiles.end(), std::greater<std::string>());
 
@@ -74,8 +67,9 @@ int FileOrchestrator::initializeFilesAndFolders() {
     createFolder(indexFolder);
 
     if (std::filesystem::is_empty(dataFolder)) {
-        createFile(dataFolder + getTimestamp());
-        createFile(indexFolder + getTimestamp());
+        std::string timestamp = getTimestamp();
+        createFile(dataFolder + timestamp);
+        createFile(indexFolder + timestamp);
     }
 
     return 0;
@@ -89,7 +83,18 @@ std::string FileOrchestrator::getCurrentDataFileName() {
     return globalFiles[0];
 }
 
-void FileOrchestrator::createNew() {
+void FileOrchestrator::createNewChunk() {
+    std::string timestamp = getTimestamp();
+    createFile(dataFolder + timestamp);
+    createFile(indexFolder + timestamp);
+
+    // add new file name to the front of globalFiles
+    globalFiles.insert(globalFiles.begin(), timestamp);
+
+    activeStream.close(); // later it will be opened by write() function with this new file
+}
+
+void FileOrchestrator::createNewActiveStream() {
     std::string dataFilePath = getCurrentDataFilePath();
     activeStream = std::ofstream(dataFilePath, std::ios::ate | std::ios::app | std::ios::binary);
 }
@@ -162,9 +167,15 @@ void FileOrchestrator::loadIndex(const std::string &indexFileName, const std::st
 
 void FileOrchestrator::write(const std::string &key, const std::string &value)
 {
+
+    // TODO: write logic for creating a new chunk
+    if (globalIndexTable[getCurrentDataFileName()].size() > 2) {
+        createNewChunk();
+    }
+
     if (!activeStream.is_open())
     {
-        createNew();
+        createNewActiveStream();
         if (!activeStream.is_open()) {
             std::cerr << "Error opening " << getCurrentDataFilePath() << " for writing data." << std::endl;
             return;
@@ -236,6 +247,7 @@ std::string FileOrchestrator::read(const std::string &_key)
             continue;
         }
 
+        std::cout << "Got " << _key << " from: " << fileName << std::endl;
         return value;
     }
     return "";

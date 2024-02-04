@@ -30,7 +30,9 @@ private:
     int createFolder(const std::string &folderPath);
     int createFile(const std::string &filePath);
 
-    void createNew();
+    void createNewChunk();
+
+    void createNewActiveStream();
 
     void loadAllIndex();
     void saveAllIndex();
