@@ -16,11 +16,13 @@ private:
     std::ofstream activeStream;
 
     // map with (key=filename, value=indexTable)
-    std::unordered_map<std::string, std::unordered_map<std::string, long long>> globalIndexTable;
+    std::unordered_map<std::string, std::unordered_map<std::string, long long>> globalIndexTableMapper;
     
     // vector to store all filenames in sorted order (latest file in index 0)
-    std::vector<std::string> globalFiles;
+    std::vector<std::string> globalChunks;
     
+    // create new chunk if more than THRESHOLD keys are there in activeStream's map
+    int THRESHOLD = 5;
 
     std::string getTimestamp();
     std::string getCurrentDataFilePath();

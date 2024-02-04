@@ -15,11 +15,11 @@ std::string FileOrchestrator::getTimestamp() {
 }
 
 std::string FileOrchestrator::getCurrentDataFilePath() {
-    return dataFolder + globalFiles[0];
+    return dataFolder + globalChunks[0];
 }
 
 std::string FileOrchestrator::getCurrentDataFileName() {
-    return globalFiles[0];
+    return globalChunks[0];
 }
 
 int FileOrchestrator::createFile(const std::string &filePath) {
@@ -69,8 +69,8 @@ void FileOrchestrator::createNewChunk() {
     createFile(dataFolder + timestamp);
     createFile(indexFolder + timestamp);
 
-    // add new file name to the front of globalFiles
-    globalFiles.insert(globalFiles.begin(), timestamp);
+    // add new file name to the front of globalChunks
+    globalChunks.insert(globalChunks.begin(), timestamp);
 
     activeStream.close(); // later it will be opened by write() function with this new file
 }
@@ -81,20 +81,20 @@ void FileOrchestrator::createNewActiveStream() {
 }
 
 void FileOrchestrator::loadAllIndex() {
-    // TODO: loop through all files in directory and add it to globalFiles
+    // TODO: loop through all files in directory and add it to globalChunks
     for (const auto & entry : std::filesystem::directory_iterator(dataFolder)) {
-        globalFiles.push_back(entry.path().filename().string());
+        globalChunks.push_back(entry.path().filename().string());
     }
 
-    std::sort(globalFiles.begin(), globalFiles.end(), std::greater<std::string>());
+    std::sort(globalChunks.begin(), globalChunks.end(), std::greater<std::string>());
 
-    for (const auto& file : globalFiles) {
+    for (const auto& file : globalChunks) {
         loadIndex(file, indexFolder + file);
     }
 }
 
 void FileOrchestrator::saveAllIndex() {
-    for (const auto& file : globalFiles) {
+    for (const auto& file : globalChunks) {
         saveIndex(file, indexFolder + file);
     }
 }
@@ -120,7 +120,7 @@ void FileOrchestrator::saveIndex(const std::string &indexFileName, const std::st
     }
 
     // Write the key-value pairs to the index file in binary format
-    for (const auto &pair : globalIndexTable[indexFileName])
+    for (const auto &pair : globalIndexTableMapper[indexFileName])
     {
         int keySize = static_cast<int>(pair.first.size());
         file.write(reinterpret_cast<const char *>(&keySize), sizeof(int));
@@ -157,7 +157,7 @@ void FileOrchestrator::loadIndex(const std::string &indexFileName, const std::st
         if (!file.read(reinterpret_cast<char *>(&value), sizeof(long long)))
             break;
 
-        globalIndexTable[indexFileName][key] = value;
+        globalIndexTableMapper[indexFileName][key] = value;
     }
 
     file.close();
@@ -169,8 +169,8 @@ void FileOrchestrator::write(const std::string &key, const std::string &value)
 {
 
     // TODO: write a better logic for creating a new chunk
-    // current strategy = create new chunk if more than 2 keys are there in activeStream's map
-    if (globalIndexTable[getCurrentDataFileName()].size() > 2) {
+    // current strategy = create new chunk if more than THRESHOLD keys are there in activeStream's map
+    if (globalIndexTableMapper[getCurrentDataFileName()].size() >= THRESHOLD) {
         createNewChunk();
     }
 
@@ -185,7 +185,7 @@ void FileOrchestrator::write(const std::string &key, const std::string &value)
 
     long long byteOffset = activeStream.tellp();
 
-    globalIndexTable[getCurrentDataFileName()][key] = byteOffset;
+    globalIndexTableMapper[getCurrentDataFileName()][key] = byteOffset;
 
     int keySize = static_cast<int>(key.size());
     activeStream.write(reinterpret_cast<const char *>(&keySize), sizeof(int));
@@ -202,10 +202,10 @@ void FileOrchestrator::write(const std::string &key, const std::string &value)
 
 std::string FileOrchestrator::read(const std::string &_key)
 {
-    // loop through all the indexTables in sorted globalFiles to find key
-    for (const auto& fileName : globalFiles) {
-        auto offsetIt = globalIndexTable[fileName].find(_key);
-        if (offsetIt == globalIndexTable[fileName].end())
+    // loop through all the indexTables in sorted globalChunks to find key
+    for (const auto& fileName : globalChunks) {
+        auto offsetIt = globalIndexTableMapper[fileName].find(_key);
+        if (offsetIt == globalIndexTableMapper[fileName].end())
         {
             continue; // Key not found
         }
@@ -248,7 +248,7 @@ std::string FileOrchestrator::read(const std::string &_key)
             continue;
         }
 
-        std::cout << "Got " << _key << " from: " << fileName << std::endl;
+        std::cout << "Got key " << _key << " from: " << fileName << " chunk" << std::endl;
         return value;
     }
     return "";

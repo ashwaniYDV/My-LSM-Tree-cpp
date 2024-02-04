@@ -6,14 +6,30 @@ using namespace std;
 int main() {
     KeyValueStore kvStore;
 
-    kvStore.put("k1", "ashwani");
-    kvStore.put("k2", "yadav");
-    kvStore.put("k3", "iit-patna");
-    kvStore.put("k4", "{ \"name\": \"Ashwani Yadav\", \"gender\": \"Male\", \"age\": 23, \"address\": { city\": \"Kanpur\", \"state\": \"UP\" }, \"favNumber\": [4, 9, 13] }");
-
-    cout << "k1 = " << kvStore.get("k1") << endl;
-    cout << "k4 = " << kvStore.get("k4") << endl;
-    cout << "k5 = " << kvStore.get("k5") << endl;
+    while(true) {
+        cout << "Enter 0 to exit. Enter 1 to get item.  Enter 2 to put item" << std::endl;
+        
+        int choice;
+        cin >> choice;
+        if (choice == 0) {
+            break;
+        } else if (choice == 1) {
+            cout << "Enter key: ";
+            std::string key;
+            cin >> key;
+            std::cout << kvStore.get(key) << std::endl;
+        } else if (choice == 2) {
+            cout << "Enter key: ";
+            std::string key;
+            cin >> key;
+            cout << "Enter value: ";
+            std::string value;
+            cin >> value;
+            kvStore.put(key, value);
+        } else {
+            std::cout << "Enter correct choice." << std::endl;
+        }
+    }
 
     return 0;
 }
