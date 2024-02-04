@@ -14,6 +14,14 @@ std::string FileOrchestrator::getTimestamp() {
     return timestampString;
 }
 
+std::string FileOrchestrator::getCurrentDataFilePath() {
+    return dataFolder + globalFiles[0];
+}
+
+std::string FileOrchestrator::getCurrentDataFileName() {
+    return globalFiles[0];
+}
+
 int FileOrchestrator::createFile(const std::string &filePath) {
     // Open the file for writing
     std::ofstream file(filePath);
@@ -27,25 +35,6 @@ int FileOrchestrator::createFile(const std::string &filePath) {
     file.close();
 
     return 0;
-}
-
-void FileOrchestrator::loadAllIndex() {
-    // TODO: loop through all files in directory and add it to globalFiles
-    for (const auto & entry : std::filesystem::directory_iterator(dataFolder)) {
-        globalFiles.push_back(entry.path().filename().string());
-    }
-
-    std::sort(globalFiles.begin(), globalFiles.end(), std::greater<std::string>());
-
-    for (const auto& file : globalFiles) {
-        loadIndex(file, indexFolder + file);
-    }
-}
-
-void FileOrchestrator::saveAllIndex() {
-    for (const auto& file : globalFiles) {
-        saveIndex(file, indexFolder + file);
-    }
 }
 
 int FileOrchestrator::createFolder(const std::string &folderPath) {
@@ -75,14 +64,6 @@ int FileOrchestrator::initializeFilesAndFolders() {
     return 0;
 }
 
-std::string FileOrchestrator::getCurrentDataFilePath() {
-    return dataFolder + globalFiles[0];
-}
-
-std::string FileOrchestrator::getCurrentDataFileName() {
-    return globalFiles[0];
-}
-
 void FileOrchestrator::createNewChunk() {
     std::string timestamp = getTimestamp();
     createFile(dataFolder + timestamp);
@@ -97,6 +78,25 @@ void FileOrchestrator::createNewChunk() {
 void FileOrchestrator::createNewActiveStream() {
     std::string dataFilePath = getCurrentDataFilePath();
     activeStream = std::ofstream(dataFilePath, std::ios::ate | std::ios::app | std::ios::binary);
+}
+
+void FileOrchestrator::loadAllIndex() {
+    // TODO: loop through all files in directory and add it to globalFiles
+    for (const auto & entry : std::filesystem::directory_iterator(dataFolder)) {
+        globalFiles.push_back(entry.path().filename().string());
+    }
+
+    std::sort(globalFiles.begin(), globalFiles.end(), std::greater<std::string>());
+
+    for (const auto& file : globalFiles) {
+        loadIndex(file, indexFolder + file);
+    }
+}
+
+void FileOrchestrator::saveAllIndex() {
+    for (const auto& file : globalFiles) {
+        saveIndex(file, indexFolder + file);
+    }
 }
 
 FileOrchestrator::FileOrchestrator()

@@ -26,12 +26,11 @@ private:
     std::string getCurrentDataFilePath();
     std::string getCurrentDataFileName();
 
-    int initializeFilesAndFolders();
     int createFolder(const std::string &folderPath);
     int createFile(const std::string &filePath);
+    int initializeFilesAndFolders();
 
     void createNewChunk();
-
     void createNewActiveStream();
 
     void loadAllIndex();
