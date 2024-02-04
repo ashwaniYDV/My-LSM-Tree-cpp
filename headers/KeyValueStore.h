@@ -10,7 +10,7 @@ class KeyValueStore
 private:
     FileOrchestrator fileOrchestrator;
 public:
-    KeyValueStore(const std::string &dataFilePath, const std::string &indexFilePath);
+    KeyValueStore();
 
     void put(const std::string &key, const std::string &value);
     std::string get(const std::string &key);

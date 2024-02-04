@@ -4,10 +4,7 @@
 using namespace std;
 
 int main() {
-    string dataFilePath = "bin/kvDB.bin";
-    string indexFilePath = "bin/kvIndex.bin";
-
-    KeyValueStore kvStore(dataFilePath, indexFilePath);
+    KeyValueStore kvStore;
 
     kvStore.put("k1", "ashwani");
     kvStore.put("k2", "yadav");

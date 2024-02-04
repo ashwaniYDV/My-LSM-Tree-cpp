@@ -2,8 +2,8 @@
 #include <fstream>
 #include <iostream>
 
-KeyValueStore::KeyValueStore(const std::string &dataFilePath, const std::string &indexFilePath)
-    : fileOrchestrator(dataFilePath, indexFilePath)
+KeyValueStore::KeyValueStore()
+    : fileOrchestrator()
 {
     
 }
