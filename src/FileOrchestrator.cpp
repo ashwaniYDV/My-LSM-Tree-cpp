@@ -190,6 +190,7 @@ void FileOrchestrator::write(const std::string &key, const std::string &value)
 
 std::string FileOrchestrator::read(const std::string &_key)
 {
+    // loop through all the indexTables in sorted globalFiles to find key
     for (const auto& fileName : globalFiles) {
         auto offsetIt = globalIndexTable[fileName].find(_key);
         if (offsetIt == globalIndexTable[fileName].end())
