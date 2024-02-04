@@ -168,7 +168,8 @@ void FileOrchestrator::loadIndex(const std::string &indexFileName, const std::st
 void FileOrchestrator::write(const std::string &key, const std::string &value)
 {
 
-    // TODO: write logic for creating a new chunk
+    // TODO: write a better logic for creating a new chunk
+    // current strategy = create new chunk if more than 2 keys are there in activeStream's map
     if (globalIndexTable[getCurrentDataFileName()].size() > 2) {
         createNewChunk();
     }
