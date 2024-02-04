@@ -5,7 +5,8 @@ project(Log-Structured-KV-Storage-Engine)
 # Add the source files
 set(SOURCES
     src/main.cpp
-    src/KeyValueStore
+    src/KeyValueStore.cpp
+    src/FileOrchestrator.cpp
 )
 
 # Add the header files
