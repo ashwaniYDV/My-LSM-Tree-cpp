@@ -2,6 +2,10 @@
 #include <fstream>
 #include <iostream>
 
+void FileOrchestrator::createNew() {
+    activeStream = std::ofstream(dataFilePath, std::ios::ate | std::ios::app | std::ios::binary);
+}
+
 FileOrchestrator::FileOrchestrator(const std::string &dataFilePath, const std::string &indexFilePath)
     : dataFilePath(dataFilePath), indexFilePath(indexFilePath)
 {
@@ -70,27 +74,30 @@ void FileOrchestrator::loadIndex()
 
 void FileOrchestrator::write(const std::string &key, const std::string &value)
 {
-    std::ofstream file(dataFilePath, std::ios::ate | std::ios::app | std::ios::binary);
-
-    if (!file.is_open())
+    if (!activeStream.is_open())
     {
-        std::cerr << "Error opening " << dataFilePath << " for writing data." << std::endl;
-        return;
+        createNew();
+        if (!activeStream.is_open()) {
+            std::cerr << "Error opening " << dataFilePath << " for writing data." << std::endl;
+            return;
+        }
     }
 
-    long long byteOffset = file.tellp();
+    long long byteOffset = activeStream.tellp();
 
     indexTable[key] = byteOffset;
 
     int keySize = static_cast<int>(key.size());
-    file.write(reinterpret_cast<const char *>(&keySize), sizeof(int));
-    file.write(key.c_str(), keySize);
+    activeStream.write(reinterpret_cast<const char *>(&keySize), sizeof(int));
+    activeStream.flush();
+    activeStream.write(key.c_str(), keySize);
+    activeStream.flush();
 
     int valueSize = static_cast<int>(value.size());
-    file.write(reinterpret_cast<const char *>(&valueSize), sizeof(int));
-    file.write(value.c_str(), valueSize);
-
-    // file.close(); // Closing here is not necessary since ofstream's destructor will close the file.
+    activeStream.write(reinterpret_cast<const char *>(&valueSize), sizeof(int));
+    activeStream.flush();
+    activeStream.write(value.c_str(), valueSize);
+    activeStream.flush();
 }
 
 std::string FileOrchestrator::read(const std::string &_key)
