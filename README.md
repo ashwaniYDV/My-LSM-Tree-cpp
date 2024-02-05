@@ -10,5 +10,5 @@
 * Data is stored in multiple chunks for handling large data. 
 
 ## TODO
-* Write a compression algorithm (runninh in background) to merge these chunks and their indexes. (Since data file is append only, a key can be present in multiple files but its latest record will be in one of the latest files.)
+* Write a compaction algorithm (runninh in background) to merge older chunks and their indexes. (Since data file is append only, a key can be present in multiple files but its latest record will be in one of the latest files.)
 * Implement LSM tree.
