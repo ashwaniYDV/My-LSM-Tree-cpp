@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCES
     src/main.cpp
     src/KeyValueStore.cpp
-    src/FileOrchestrator.cpp
 )
 
 # Add the header files

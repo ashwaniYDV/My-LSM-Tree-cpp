@@ -3,12 +3,12 @@
 
 #include <unordered_map>
 #include <string>
-#include "FileOrchestrator.h"
+#include "Engine.h"
 
 class KeyValueStore
 {
 private:
-    FileOrchestrator fileOrchestrator;
+    Engine engine;
 public:
     KeyValueStore();
 
