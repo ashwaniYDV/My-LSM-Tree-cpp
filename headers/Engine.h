@@ -17,6 +17,14 @@ struct Engine
 
     std::unordered_map<std::string, std::pair<std::string, size_t>> offsetMap; 
 
+    Engine() {
+        orchestrator.loadIndex(offsetMap);
+    }
+
+    ~Engine() {
+        orchestrator.saveIndex(offsetMap);
+    }
+
     void write(const std::string &key, const std::string &value)
     {
         DataPacket dp(key, value, PacketType::UPDATE);
@@ -31,9 +39,8 @@ struct Engine
         auto& activeStream = orchestrator.getActiveStream();
 
         long long byteOffset = activeStream.tellp();
-        std::cout << "byteOffset = " << byteOffset << std::endl;
 
-        offsetMap.insert({ dp.key, {orchestrator.getCurrentDataFilePath(), byteOffset} });
+        offsetMap[dp.key] = {orchestrator.getCurrentDataFilePath(), byteOffset };
         
         activeStream << dp;
         activeStream.flush();

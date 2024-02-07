@@ -8,6 +8,7 @@
 #include <iostream>
 #include <filesystem>
 #include <algorithm>
+#include "IndexKeyData.h"
 
 struct FileOrchestrator
 {
@@ -32,6 +33,10 @@ struct FileOrchestrator
 
     std::string getCurrentDataFilePath() {
         return dataFolder + dataFiles[0];
+    }
+
+    std::string getIndexFilePath() {
+        return indexFolder + "index";
     }
 
     int createFile(const std::string &filePath) {
@@ -71,9 +76,9 @@ struct FileOrchestrator
             std::string timestamp = getTimestamp();
             createFile(dataFolder + timestamp);
         }
-        if (std::filesystem::is_empty(indexFolder)) {
-            createFile(indexFolder + "index");
-        }
+        // if (std::filesystem::is_empty(indexFolder)) {
+        //     createFile(getIndexFilePath());
+        // }
 
         return 0;
     }
@@ -106,17 +111,10 @@ struct FileOrchestrator
     {
         initializeFilesAndFolders();
         loadAllFiles();
-        // loadIndex();
-    }
-
-    ~FileOrchestrator()
-    {
-        // saveIndex();
     }
 
     auto getActiveStream() -> std::ofstream& {
-        if (!activeStream.is_open())
-        {
+        if (!activeStream.is_open()) {
             createNewActiveStream();
             // if (!activeStream.is_open())
             // {
@@ -127,62 +125,47 @@ struct FileOrchestrator
         return activeStream;
     }
 
+    void saveIndex(std::unordered_map<std::string, std::pair<std::string, size_t>>& offsetMap) {
+        std::ofstream file(getIndexFilePath(), std::ios::binary | std::ios::trunc);
+        if (!file.is_open())
+        {
+            std::cerr << "Error opening "<< getIndexFilePath() << " for persisting index." << std::endl;
+            return;
+        }
+
+        // Write the key-value pairs to the index file in binary format
+        for (const auto &pair : offsetMap)
+        {
+            IndexKeyData ikd(pair.first, pair.second.first, pair.second.second);
+            file << ikd;
+            file.flush();
+        }
+
+        file.close();
+
+        std::cout << "Index saved to " << getIndexFilePath() << std::endl;
+    }
+
+    void loadIndex(std::unordered_map<std::string, std::pair<std::string, size_t>>& offsetMap)
+    {
+        std::ifstream file(getIndexFilePath(), std::ios::binary);
+        if (!file.is_open())
+        {
+            std::cerr << "Error opening " << getIndexFilePath() << " for loading index." << std::endl;
+            return;
+        }
+
+        IndexKeyData ikd;
+        while (file >> ikd) {
+            offsetMap[ikd.key] = {ikd.fileName, ikd.offSet};
+        }
+
+        file.close();
+
+        std::cout << "Index loaded from " << getIndexFilePath() << std::endl;
+    }
+
+
 };
-
-// void saveIndex(const std::string &indexFileName, const std::string &indexFilePath)
-// {
-//     std::ofstream file(indexFilePath, std::ios::binary | std::ios::trunc);
-//     if (!file.is_open())
-//     {
-//         std::cerr << "Error opening "<< indexFilePath << " for persisting index." << std::endl;
-//         return;
-//     }
-
-//     // Write the key-value pairs to the index file in binary format
-//     for (const auto &pair : globalIndexTableMapper[indexFileName])
-//     {
-//         int keySize = static_cast<int>(pair.first.size());
-//         file.write(reinterpret_cast<const char *>(&keySize), sizeof(int));
-//         file.write(pair.first.c_str(), keySize);
-
-//         file.write(reinterpret_cast<const char *>(&pair.second), sizeof(long long));
-//     }
-
-//     file.close();
-
-//     std::cout << "Index saved to " << indexFilePath << std::endl;
-// }
-
-// void loadIndex(const std::string &indexFileName, const std::string &indexFilePath)
-// {
-//     std::ifstream file(indexFilePath, std::ios::binary);
-//     if (!file.is_open())
-//     {
-//         std::cerr << "Error opening " << indexFilePath << " for loading index." << std::endl;
-//         return;
-//     }
-
-//     while (true)
-//     {
-//         int keySize;
-//         if (!file.read(reinterpret_cast<char *>(&keySize), sizeof(int)))
-//             break;
-
-//         std::string key(keySize, '\0');
-//         if (!file.read(&key[0], keySize))
-//             break;
-
-//         long long value;
-//         if (!file.read(reinterpret_cast<char *>(&value), sizeof(long long)))
-//             break;
-
-//         globalIndexTableMapper[indexFileName][key] = value;
-//     }
-
-//     file.close();
-
-//     std::cout << "Index loaded from " << indexFilePath << std::endl;
-// }
-
 
 #endif // FILEORCHESTRATOR_H

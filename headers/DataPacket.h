@@ -73,17 +73,11 @@ struct DataPacket
     friend auto operator<<(ofstream &fs, const DataPacket &dp) -> ofstream &
     {
         fs.write(reinterpret_cast<const char *>(&dp.timestamp), sizeof(dp.timestamp));
-        fs.flush();
         fs.write(reinterpret_cast<const char *>(&dp.keySize), sizeof(dp.keySize));
-        fs.flush();
         fs.write(reinterpret_cast<const char *>(&dp.valueSize), sizeof(dp.valueSize));
-        fs.flush();
         fs.write(reinterpret_cast<const char *>(&dp.packetType), sizeof(dp.packetType));
-        fs.flush();
         fs.write(dp.key.c_str(), dp.keySize);
-        fs.flush();
         fs.write(dp.value.c_str(), dp.valueSize);
-        fs.flush();
         
         return fs;
     }
