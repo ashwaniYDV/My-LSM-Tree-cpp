@@ -15,3 +15,6 @@
 
 ## How to run
 * Run executable file (engine.exe) in build folder
+
+## References
+* https://arpitbhayani.me/blogs/bitcask/
