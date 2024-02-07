@@ -16,7 +16,7 @@ struct FileOrchestrator
     std::string dataFolder = "bin/data/";
     std::string indexFolder = "bin/index/";
 
-    size_t THRESHOLD_FILE_SIZE = 100;
+    size_t THRESHOLD_FILE_SIZE = 1000;
 
     std::ofstream activeStream;
 
