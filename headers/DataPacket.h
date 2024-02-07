@@ -118,7 +118,7 @@ struct DataPacket
 
     auto getSize() const -> size_t
     {
-        return sizeof(time_t) + 2 * sizeof(size_t) + sizeof(PacketType) + keySize + valueSize;
+        return sizeof(time_t) + sizeof(keySize) + sizeof(valueSize) + sizeof(PacketType) + keySize + valueSize;
     }
 };
 

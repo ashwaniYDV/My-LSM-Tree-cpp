@@ -31,14 +31,11 @@ struct Engine
         std::cout << dp;
 
         // TODO: write a better logic for creating a new chunk
-        // current strategy = create new chunk if more than THRESHOLD keys are there in activeStream's map
-        // if (globalIndexTableMapper[getCurrentDataFileName()].size() >= THRESHOLD) {
-        //     createNewChunk();
-        // }
+        orchestrator.checkIfNewChunkNeeded(dp.getSize());
 
         auto& activeStream = orchestrator.getActiveStream();
 
-        long long byteOffset = activeStream.tellp();
+        size_t byteOffset = activeStream.tellp();
 
         offsetMap[dp.key] = {orchestrator.getCurrentDataFilePath(), byteOffset };
         

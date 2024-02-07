@@ -16,6 +16,8 @@ struct FileOrchestrator
     std::string dataFolder = "bin/data/";
     std::string indexFolder = "bin/index/";
 
+    size_t THRESHOLD_FILE_SIZE = 100;
+
     std::ofstream activeStream;
 
     // vector to store all filenames in sorted order (latest file in index 0)
@@ -157,6 +159,7 @@ struct FileOrchestrator
 
         IndexKeyData ikd;
         while (file >> ikd) {
+            std::cout << ikd;
             offsetMap[ikd.key] = {ikd.fileName, ikd.offSet};
         }
 
@@ -165,7 +168,19 @@ struct FileOrchestrator
         std::cout << "Index loaded from " << getIndexFilePath() << std::endl;
     }
 
+    auto getActiveStreamSize() -> size_t {
+        if (activeStream.is_open()) {
+            size_t byteOffset = activeStream.tellp();
+            return activeStream.tellp();
+        }
+        return 0;
+    }
 
+    void checkIfNewChunkNeeded(size_t dataPacketSize) {
+        if (getActiveStreamSize() + dataPacketSize > THRESHOLD_FILE_SIZE) {
+            createNewChunk();
+        }
+    }
 };
 
 #endif // FILEORCHESTRATOR_H
