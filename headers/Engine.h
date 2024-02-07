@@ -11,8 +11,7 @@
 #include "FileOrchestrator.h"
 #include "DataPacket.h"
 
-struct Engine
-{
+struct Engine {
     FileOrchestrator orchestrator;
 
     std::unordered_map<std::string, std::pair<std::string, size_t>> offsetMap; 
@@ -28,9 +27,7 @@ struct Engine
     void write(const std::string &key, const std::string &value)
     {
         DataPacket dp(key, value, PacketType::UPDATE);
-        std::cout << dp;
 
-        // TODO: write a better logic for creating a new chunk
         orchestrator.checkIfNewChunkNeeded(dp.getSize());
 
         auto& activeStream = orchestrator.getActiveStream();
@@ -64,8 +61,6 @@ struct Engine
 
         DataPacket dp;
         file >> dp;
-
-        std::cout << dp;
 
         return dp.value;
         

@@ -101,7 +101,6 @@ struct FileOrchestrator
     }
 
     void loadAllFiles() {
-        // TODO: loop through all files in directory and add it to globalChunks
         for (const auto & entry : std::filesystem::directory_iterator(dataFolder)) {
             dataFiles.push_back(entry.path().filename().string());
         }
@@ -157,6 +156,7 @@ struct FileOrchestrator
             return;
         }
 
+        std::cout << "Loading these indexded" << std::endl;
         IndexKeyData ikd;
         while (file >> ikd) {
             std::cout << ikd;
