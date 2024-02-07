@@ -40,11 +40,10 @@ struct Engine {
         activeStream.flush();
     }
 
-    std::string read(const std::string &key)
-    {
+    bool read(const std::string &key, DataPacket& dp) {
         if (!offsetMap.count(key))
         {
-            return "";
+            return false;
         }
 
         auto dataFilePath = offsetMap[key].first;
@@ -52,18 +51,14 @@ struct Engine {
         if (!file.is_open())
         {
             std::cerr << "Error opening " << dataFilePath << " for reading data." << std::endl;
-            return "";
+            return false;
         }
 
         auto byteOffset = offsetMap[key].second;
-
         file.seekg(byteOffset);
-
-        DataPacket dp;
         file >> dp;
 
-        return dp.value;
-        
+        return true;
     }
 };
 

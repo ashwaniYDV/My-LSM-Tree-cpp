@@ -17,7 +17,7 @@ int main() {
             cout << "Enter key: ";
             std::string key;
             cin >> key;
-            std::cout << kvStore.get(key) << std::endl;
+            std::cout << kvStore.get(key).value << std::endl;
         } else if (choice == 2) {
             cout << "Enter key: ";
             std::string key;

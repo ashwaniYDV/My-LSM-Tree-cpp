@@ -13,7 +13,11 @@ void KeyValueStore::put(const std::string &key, const std::string &value)
     engine.write(key, value);
 }
 
-std::string KeyValueStore::get(const std::string &key)
+DataPacket KeyValueStore::get(const std::string &key)
 {
-    return engine.read(key);
+    DataPacket dp;
+    if (!engine.read(key, dp)) {
+        std::cerr << "Key: {" << key << "} not found." << std::endl;
+    }
+    return dp;
 }
