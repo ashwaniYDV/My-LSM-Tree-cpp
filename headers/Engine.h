@@ -58,6 +58,10 @@ struct Engine {
         file.seekg(byteOffset);
         file >> dp;
 
+        if (dp.keySize == 0) {
+            return false;
+        }
+
         return true;
     }
 };
