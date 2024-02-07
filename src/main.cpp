@@ -6,6 +6,20 @@ using namespace std;
 int main() {
     KeyValueStore kvStore;
 
+    int n;
+    cin >> n;
+    for(int i = 1; i <= n; i++) {
+        std::string key = std::to_string(i);
+        kvStore.put(key, key);
+    }
+
+    for(int i = 1; i <= n; i++) {
+        std::string key = std::to_string(i);
+        std::cout << kvStore.get(key).value << std::endl;
+    }
+
+    return 0;
+
     while(true) {
         cout << "Enter 0 to exit. Enter 1 to get item.  Enter 2 to put item" << std::endl;
         
