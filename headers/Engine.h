@@ -1,5 +1,4 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -58,12 +57,6 @@ struct Engine {
         file.seekg(byteOffset);
         file >> dp;
 
-        if (dp.keySize == 0) {
-            return false;
-        }
-
         return true;
     }
 };
-
-#endif // ENGINE_H
