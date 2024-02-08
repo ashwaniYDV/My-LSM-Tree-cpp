@@ -2,7 +2,7 @@
 
 * Implemented a Log-Structured Key-Value Storage Engine in C++, drawing inspiration from databases like Bitcask, LevelDB, Google BigTable, RockDB, and Cassandra.
 
-## Features
+## About
 * Lightning-fast writes by appending data directly to a binary file, optimizing write performance.
 * Reads are highly efficient, leveraging an in-memory index to store byte offsets of the latest records in the data file. 
 * It is fault-tolerant, persisting both data and index to the file system.
