@@ -14,6 +14,7 @@ public:
 
     void put(const std::string &key, const std::string &value);
     DataPacket get(const std::string &key);
+    void remove(const std::string &key);
 };
 
 #endif // KEYVALUESTORE_H

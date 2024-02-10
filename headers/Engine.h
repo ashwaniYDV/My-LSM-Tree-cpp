@@ -59,4 +59,20 @@ struct Engine {
 
         return true;
     }
+
+    void remove(const std::string &key)
+    {
+        DataPacket dp(key, "", PacketType::DELETE);
+
+        orchestrator.checkIfNewChunkNeeded(dp.getSize());
+
+        auto& activeStream = orchestrator.getActiveStream();
+
+        size_t byteOffset = activeStream.tellp();
+
+        offsetMap.erase(dp.key);
+        
+        activeStream << dp;
+        activeStream.flush();
+    }
 };

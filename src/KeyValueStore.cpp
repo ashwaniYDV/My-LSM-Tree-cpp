@@ -21,3 +21,7 @@ DataPacket KeyValueStore::get(const std::string &key)
     }
     return dp;
 }
+
+void KeyValueStore::remove(const std::string &key) {
+    engine.remove(key);
+}

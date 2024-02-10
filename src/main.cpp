@@ -7,7 +7,7 @@ int main() {
     KeyValueStore kvStore;
 
     while(true) {
-        cout << "Enter 0 to exit. Enter 1 to get item.  Enter 2 to put item" << std::endl;
+        cout << "Enter 0 to exit. Enter 1 to get item.  Enter 2 to put item.  Enter 3 to delete item" << std::endl;
         
         int choice;
         cin >> choice;
@@ -26,6 +26,11 @@ int main() {
             std::string value;
             cin >> value;
             kvStore.put(key, value);
+        } else if (choice == 3) {
+            cout << "Enter key: ";
+            std::string key;
+            cin >> key;
+            kvStore.remove(key);
         } else {
             std::cout << "Enter correct choice." << std::endl;
         }
