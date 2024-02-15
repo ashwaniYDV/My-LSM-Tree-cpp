@@ -8,38 +8,42 @@
 #include <filesystem>
 #include <algorithm>
 #include "FileOrchestrator.h"
-#include "DataPacket.h"
+#include "Record.h"
 
-struct Engine {
+struct Engine
+{
     FileOrchestrator orchestrator;
 
-    std::unordered_map<std::string, std::pair<std::string, size_t>> offsetMap; 
+    std::unordered_map<std::string, std::pair<std::string, size_t>> offsetMap;
 
-    Engine() {
+    Engine()
+    {
         orchestrator.loadIndex(offsetMap);
     }
 
-    ~Engine() {
+    ~Engine()
+    {
         orchestrator.saveIndex(offsetMap);
     }
 
     void write(const std::string &key, const std::string &value)
     {
-        DataPacket dp(key, value, PacketType::UPDATE);
+        Record record(key, value, RecordType::UPDATE);
 
-        orchestrator.checkIfNewChunkNeeded(dp.getSize());
+        orchestrator.checkIfNewChunkNeeded(record.getSize());
 
-        auto& activeStream = orchestrator.getActiveStream();
+        auto &activeStream = orchestrator.getActiveStream();
 
         size_t byteOffset = activeStream.tellp();
 
-        offsetMap[dp.key] = {orchestrator.getCurrentDataFilePath(), byteOffset };
-        
-        activeStream << dp;
+        offsetMap[record.key] = {orchestrator.getCurrentDataFilePath(), byteOffset};
+
+        activeStream << record;
         activeStream.flush();
     }
 
-    bool read(const std::string &key, DataPacket& dp) {
+    bool read(const std::string &key, Record &record)
+    {
         if (!offsetMap.count(key))
         {
             return false;
@@ -55,24 +59,22 @@ struct Engine {
 
         auto byteOffset = offsetMap[key].second;
         file.seekg(byteOffset);
-        file >> dp;
+        file >> record;
 
         return true;
     }
 
     void remove(const std::string &key)
     {
-        DataPacket dp(key, "", PacketType::DELETE);
+        Record record(key, "", RecordType::DELETE);
 
-        orchestrator.checkIfNewChunkNeeded(dp.getSize());
+        orchestrator.checkIfNewChunkNeeded(record.getSize());
 
-        auto& activeStream = orchestrator.getActiveStream();
+        auto &activeStream = orchestrator.getActiveStream();
 
-        size_t byteOffset = activeStream.tellp();
+        offsetMap.erase(record.key);
 
-        offsetMap.erase(dp.key);
-        
-        activeStream << dp;
+        activeStream << record;
         activeStream.flush();
     }
 };

@@ -1,40 +1,59 @@
 #include <iostream>
+#include <sstream>
+#include <string>
 #include "KeyValueStore.h"
 
-using namespace std;
+bool processCommand(const std::string &command, KeyValueStore &kvStore)
+{
+    std::istringstream iss(command);
+    std::string operation, key, value;
 
-int main() {
+    // Extract the operation
+    iss >> operation;
+    std::transform(operation.begin(), operation.end(), operation.begin(), ::toupper);
+
+    if (operation == "GET")
+    {
+        iss >> key;
+        std::cout << kvStore.get(key).value << std::endl;
+    }
+    else if (operation == "SET")
+    {
+        iss >> key;
+        std::getline(iss >> std::ws, value);
+        kvStore.set(key, value);
+        std::cout << "OK" << std::endl;
+    }
+    else if (operation == "DEL")
+    {
+        iss >> key;
+        kvStore.del(key);
+        std::cout << "OK" << std::endl;
+    }
+    else if (operation == "EXIT")
+    {
+        return false;
+    }
+    else
+    {
+        std::cout << "Invalid command" << std::endl;
+    }
+    return true;
+}
+
+int main()
+{
     KeyValueStore kvStore;
 
-    while(true) {
-        cout << "Enter 0 to exit. Enter 1 to get item.  Enter 2 to put item.  Enter 3 to delete item" << std::endl;
-        
-        int choice;
-        cin >> choice;
-        if (choice == 0) {
+    std::string command;
+
+    while (true)
+    {
+        std::cout << ">";
+        std::getline(std::cin, command);
+        if (!processCommand(command, kvStore)) {
             break;
-        } else if (choice == 1) {
-            cout << "Enter key: ";
-            std::string key;
-            cin >> key;
-            std::cout << kvStore.get(key).value << std::endl;
-        } else if (choice == 2) {
-            cout << "Enter key: ";
-            std::string key;
-            cin >> key;
-            cout << "Enter value: ";
-            std::string value;
-            cin >> value;
-            kvStore.put(key, value);
-        } else if (choice == 3) {
-            cout << "Enter key: ";
-            std::string key;
-            cin >> key;
-            kvStore.remove(key);
-        } else {
-            std::cout << "Enter correct choice." << std::endl;
         }
     }
-
     return 0;
 }

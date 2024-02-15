@@ -5,23 +5,24 @@
 KeyValueStore::KeyValueStore()
     : engine()
 {
-    
 }
 
-void KeyValueStore::put(const std::string &key, const std::string &value)
+void KeyValueStore::set(const std::string &key, const std::string &value)
 {
     engine.write(key, value);
 }
 
-DataPacket KeyValueStore::get(const std::string &key)
+Record KeyValueStore::get(const std::string &key)
 {
-    DataPacket dp;
-    if (!engine.read(key, dp)) {
+    Record record;
+    if (!engine.read(key, record))
+    {
         std::cerr << "Key: {" << key << "} not found." << std::endl;
     }
-    return dp;
+    return record;
 }
 
-void KeyValueStore::remove(const std::string &key) {
+void KeyValueStore::del(const std::string &key)
+{
     engine.remove(key);
 }

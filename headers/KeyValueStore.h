@@ -1,5 +1,4 @@
-#ifndef KEYVALUESTORE_H
-#define KEYVALUESTORE_H
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -9,12 +8,11 @@ class KeyValueStore
 {
 private:
     Engine engine;
+
 public:
     KeyValueStore();
 
-    void put(const std::string &key, const std::string &value);
-    DataPacket get(const std::string &key);
-    void remove(const std::string &key);
+    void set(const std::string &key, const std::string &value);
+    Record get(const std::string &key);
+    void del(const std::string &key);
 };
-
-#endif // KEYVALUESTORE_H

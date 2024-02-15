@@ -1,5 +1,4 @@
-#ifndef INDEXKEYDATA_H
-#define INDEXKEYDATA_H
+#pragma once
 
 #include <chrono>
 #include <iostream>
@@ -87,5 +86,3 @@ struct IndexKeyData
         return sizeof(keySize) + sizeof(fileNameSize) + sizeof(offSet) + keySize + fileNameSize;
     }
 };
-
-#endif // INDEXKEYDATA_H
